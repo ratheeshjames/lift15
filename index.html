@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f5ff">
+<meta name="color-scheme" content="light dark">
+<title>Lift 15 — Daily Dumbbell Workout</title>
+<style>
+/* Material 3 / Android-inspired design tokens. Single-file, offline-first. */
+:root{
+  --md-primary:#5b4bdb;
+  --md-on-primary:#fff;
+  --md-primary-container:#e9ddff;
+  --md-on-primary-container:#211047;
+  --md-secondary:#625b71;
+  --md-secondary-container:#e8def8;
+  --md-on-secondary-container:#1f1a24;
+  --md-tertiary:#7a506f;
+  --md-surface:#faf8ff;
+  --md-surface-container:#f0edf5;
+  --md-surface-container-high:#eae7ef;
+  --md-surface-container-highest:#e4e1e9;
+  --md-on-surface:#1b1b21;
+  --md-on-surface-variant:#48464f;
+  --md-outline:#79767f;
+  --md-outline-variant:#cac6cf;
+  --md-error:#ba1a1a;
+  --md-success:#2d6a3f;
+  --radius-xl:28px;
+  --radius-lg:20px;
+  --radius-md:16px;
+  --radius-sm:12px;
+  --ease: cubic-bezier(.2,0,0,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --md-primary:#c9bdff;
+    --md-on-primary:#30206c;
+    --md-primary-container:#45358a;
+    --md-on-primary-container:#eee7ff;
+    --md-secondary:#cdc2d9;
+    --md-secondary-container:#4a4252;
+    --md-on-secondary-container:#ede3f2;
+    --md-tertiary:#ecb9d7;
+    --md-surface:#131217;
+    --md-surface-container:#1e1d23;
+    --md-surface-container-high:#29282f;
+    --md-surface-container-highest:#343239;
+    --md-on-surface:#e6e1e9;
+    --md-on-surface-variant:#c9c5ce;
+    --md-outline:#938f99;
+    --md-outline-variant:#48464e;
+    --md-error:#ffb4ab;
+    --md-success:#96d6a7;
+  }
+}
+*{box-sizing:border-box}
+html{background:var(--md-surface);color:var(--md-on-surface);font-family:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{
+  margin:0;
+  min-width:320px;
+  background:
+    radial-gradient(900px 360px at 50% -120px, color-mix(in srgb,var(--md-primary) 11%,transparent), transparent 70%),
+    var(--md-surface);
+  padding:
+    max(10px,env(safe-area-inset-top))
+    max(12px,env(safe-area-inset-right))
+    max(16px,env(safe-area-inset-bottom))
+    max(12px,env(safe-area-inset-left));
+}
+button,input{font:inherit}
+button{touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--md-primary) 45%,transparent);outline-offset:2px}
+.app{width:min(100%,760px);margin:0 auto;padding-bottom:24px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:68px;padding:4px 4px 10px;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-mark{
+  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  background:var(--md-primary-container);color:var(--md-on-primary-container);
+  font-size:22px;flex:none;
+}
+.brand-title{font-size:18px;font-weight:700;letter-spacing:.01em}
+.brand-sub{font-size:13px;color:var(--md-on-surface-variant);margin-top:2px}
+.icon-btn{
+  width:46px;height:46px;border-radius:50%;border:0;background:transparent;
+  color:var(--md-on-surface);display:grid;place-items:center;cursor:pointer;
+}
+.icon-btn:hover{background:var(--md-surface-container)}
+.icon{font-size:21px;line-height:1}
+.card{
+  background:var(--md-surface-container);
+  border-radius:var(--radius-xl);
+  margin-bottom:14px;
+}
+.today-card{padding:18px 18px 20px}
+.today-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.today-kicker{font-size:13px;font-weight:600;color:var(--md-on-surface-variant);letter-spacing:.02em}
+.today-title{font-size:30px;line-height:1.1;margin:4px 0 6px;font-weight:760;letter-spacing:-.035em}
+.today-focus{font-size:14px;color:var(--md-on-surface-variant)}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;min-height:34px;
+  padding:6px 12px;border-radius:999px;background:var(--md-secondary-container);
+  color:var(--md-on-secondary-container);font-size:13px;font-weight:650;white-space:nowrap;
+}
+.timer-card{
+  position:relative;overflow:hidden;
+  background:var(--md-surface-container-high);
+  padding:24px 18px 18px;
+}
+.timer-card.training{background:var(--md-primary-container)}
+.timer-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.phase{font-size:12px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:var(--md-on-surface-variant)}
+.station{font-size:13px;color:var(--md-on-surface-variant);font-variant-numeric:tabular-nums}
+.timer-wrap{display:grid;place-items:center;padding:12px 0 6px}
+.ring{
+  width:min(72vw,300px);aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--md-primary) var(--angle,0deg), color-mix(in srgb,var(--md-outline-variant) 75%,transparent) 0);
+}
+.ring::before{
+  content:"";position:absolute;inset:9px;border-radius:50%;background:var(--md-surface-container-high);
+}
+.training .ring::before{background:var(--md-primary-container)}
+.ring-content{position:relative;text-align:center;width:78%}
+.timer{font-size:clamp(64px,18vw,94px);line-height:.96;font-weight:790;letter-spacing:-.065em;font-variant-numeric:tabular-nums}
+.timer-label{margin-top:7px;font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:var(--md-on-surface-variant);font-weight:700}
+.exercise-title{
+  text-align:center;font-size:clamp(25px,7vw,34px);line-height:1.08;
+  font-weight:760;letter-spacing:-.035em;margin-top:8px;
+}
+.exercise-hint{text-align:center;color:var(--md-on-surface-variant);font-size:14px;line-height:1.4;max-width:600px;margin:7px auto 0}
+.next-row{
+  margin-top:16px;padding:11px 14px;border-radius:16px;background:color-mix(in srgb,var(--md-on-surface) 5%,transparent);
+  display:flex;justify-content:space-between;gap:12px;align-items:center
+}
+.next-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--md-on-surface-variant);font-weight:750}
+.next-name{font-size:14px;font-weight:650;margin-top:2px}
+.load-box{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:13px}
+.load-label{font-size:13px;color:var(--md-on-surface-variant)}
+.load-input{
+  width:78px;height:40px;border-radius:12px;border:1px solid var(--md-outline);
+  background:var(--md-surface);color:var(--md-on-surface);text-align:center;
+}
+.controls{
+  display:grid;grid-template-columns:1fr auto auto;gap:9px;margin-top:18px;
+}
+.btn{
+  border:0;border-radius:999px;min-height:52px;padding:0 19px;font-weight:700;cursor:pointer;
+  transition:transform .15s var(--ease),background .15s var(--ease);
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--md-primary);color:var(--md-on-primary)}
+.btn-secondary{background:var(--md-surface);color:var(--md-on-surface);border:1px solid var(--md-outline-variant)}
+.btn-tonal{background:var(--md-secondary-container);color:var(--md-on-secondary-container)}
+.btn-icon{width:52px;padding:0;display:grid;place-items:center}
+.status{text-align:center;min-height:20px;margin-top:11px;font-size:13px;color:var(--md-on-surface-variant)}
+.quick-toggles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:10px}
+.toggle-chip{
+  min-height:36px;padding:7px 11px;border-radius:999px;border:1px solid var(--md-outline-variant);
+  background:transparent;color:var(--md-on-surface-variant);font-weight:650;cursor:pointer;
+}
+.toggle-chip.on{background:var(--md-secondary-container);color:var(--md-on-secondary-container);border-color:transparent}
+.section{padding:16px}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.section-title{font-size:18px;font-weight:750}
+.section-sub{font-size:13px;color:var(--md-on-surface-variant);margin-top:2px}
+.routine-list{display:flex;flex-direction:column;gap:8px}
+.exercise-row{
+  display:flex;align-items:center;gap:10px;padding:11px;border-radius:16px;
+  background:var(--md-surface);border:1px solid transparent;
+}
+.exercise-row.active{background:var(--md-primary-container);border-color:color-mix(in srgb,var(--md-primary) 35%,transparent)}
+.exercise-row.done{opacity:.62}
+.row-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--md-surface-container-highest);font-size:12px;font-weight:750;flex:none}
+.row-main{min-width:0;flex:1}
+.row-title{font-size:14px;font-weight:680}
+.row-meta{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+.row-time{font-size:12px;font-variant-numeric:tabular-nums;color:var(--md-on-surface-variant);font-weight:650}
+.week{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px
+}
+.day{
+  min-height:58px;border-radius:15px;background:var(--md-surface);padding:8px 4px;text-align:center;
+}
+.day.today{background:var(--md-primary-container);color:var(--md-on-primary-container)}
+.day-name{font-size:11px;font-weight:750}.day-dot{font-size:12px;margin-top:5px}.day-label{font-size:9px;margin-top:3px;color:var(--md-on-surface-variant);white-space:nowrap;overflow:hidden}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat{background:var(--md-surface);border-radius:16px;padding:13px}
+.stat-value{font-size:24px;font-weight:780;font-variant-numeric:tabular-nums}.stat-label{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+.small-note{font-size:12px;color:var(--md-on-surface-variant);line-height:1.45;margin-top:10px}
+.hidden{display:none!important}
+.dialog{
+  width:min(100% - 24px,520px);max-width:520px;border:0;padding:0;color:var(--md-on-surface);
+  background:var(--md-surface-container-high);border-radius:28px;margin:auto;
+  box-shadow:0 18px 50px #0005;
+}
+.dialog::backdrop{background:#0007}
+.sheet{
+  padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sheet-title{font-size:21px;font-weight:760}
+.setting{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 2px;
+  border-bottom:1px solid var(--md-outline-variant)
+}
+.setting:last-of-type{border-bottom:0}
+.setting-name{font-size:15px;font-weight:650}.setting-sub{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+.switch{
+  width:52px;height:32px;border-radius:999px;border:2px solid var(--md-outline);
+  background:transparent;padding:2px;cursor:pointer;flex:none
+}
+.switch::after{content:"";display:block;width:24px;height:24px;border-radius:50%;background:var(--md-outline);transition:transform .18s var(--ease),background .18s var(--ease)}
+.switch.on{background:var(--md-primary);border-color:var(--md-primary)}.switch.on::after{background:var(--md-on-primary);transform:translateX(20px)}
+.sheet-close{margin-top:14px;width:100%}
+.history-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--md-outline-variant)
+}
+.history-date{font-size:14px;font-weight:650}.history-detail{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+@media(max-width:520px){
+  .today-title{font-size:27px}.controls{grid-template-columns:1fr 1fr 1fr}.controls .start{grid-column:1/-1}
+  .stats{grid-template-columns:1fr 1fr 1fr}.stat-value{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#f7f5ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lift 15">
+
+</head>
+<body>
+<main class="app" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">↗</div>
+      <div>
+        <div class="brand-title">Lift 15</div>
+        <div class="brand-sub">Daily dumbbell training</div>
+      </div>
+    </div>
+    <button class="icon-btn" id="settingsBtn" type="button" aria-label="Open workout settings"><span class="icon">⚙</span></button>
+  </header>
+
+  <section class="card today-card">
+    <div class="today-row">
+      <div>
+        <div class="today-kicker" id="dateLabel"></div>
+        <div class="today-title" id="routineName"></div>
+        <div class="today-focus" id="routineFocus"></div>
+      </div>
+      <div class="chip" id="dayChip">TODAY</div>
+    </div>
+  </section>
+
+  <section class="card timer-card" id="timerCard">
+    <div class="timer-top">
+      <div class="phase" id="phase">Ready</div>
+      <div class="station" id="station">7 × 2:00 + 1:00 finish</div>
+    </div>
+
+    <div class="timer-wrap">
+      <div class="ring" id="ring">
+        <div class="ring-content">
+          <div class="timer" id="timer" aria-live="polite">15:00</div>
+          <div class="timer-label">remaining</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-title" id="currentExercise">Press start to begin</div>
+    <div class="exercise-hint" id="currentHint">Use controlled reps and stop a set if your form breaks down.</div>
+
+    <div class="next-row" id="nextRow">
+      <div><div class="next-label">Next</div><div class="next-name" id="nextExercise">—</div></div>
+      <div class="chip" id="nextTime">2:00</div>
+    </div>
+
+    <div class="load-box">
+      <span class="load-label">Load for current exercise</span>
+      <input class="load-input" id="loadInput" type="number" inputmode="decimal" min="0" max="500" step="0.5" placeholder="kg" aria-label="Load in kilograms">
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary start" id="startBtn" type="button">Start workout</button>
+      <button class="btn btn-secondary btn-icon" id="pauseBtn" type="button" disabled aria-label="Pause workout">Ⅱ</button>
+      <button class="btn btn-tonal btn-icon" id="skipBtn" type="button" disabled aria-label="Skip interval">»</button>
+    </div>
+    <div class="status" id="status" aria-live="polite">Your routine is selected automatically from today's day.</div>
+
+    <div class="quick-toggles" aria-label="Workout cue controls">
+      <button class="toggle-chip on" id="soundToggle" type="button">🔊 Sound</button>
+      <button class="toggle-chip" id="voiceToggle" type="button">🗣 Voice</button>
+      <button class="toggle-chip" id="vibeToggle" type="button">📳 Vibration</button>
+    </div>
+  </section>
+
+  <section class="card section">
+    <div class="section-head">
+      <div><div class="section-title">Today's routine</div><div class="section-sub">2 minutes each • form first</div></div>
+      <div class="chip" id="completionChip">0 / 7</div>
+    </div>
+    <div class="routine-list" id="routineList"></div>
+    <div class="small-note">The final 1:00 is cooldown and breathing. The entire session is exactly 15:00.</div>
+  </section>
+
+  <section class="card section">
+    <div class="section-head">
+      <div><div class="section-title">This week</div><div class="section-sub">Automatic Mon–Sun rotation</div></div>
+    </div>
+    <div class="week" id="week"></div>
+  </section>
+
+  <section class="card section">
+    <div class="section-head">
+      <div><div class="section-title">Progress</div><div class="section-sub">Saved on this device</div></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-value" id="streakStat">0</div><div class="stat-label">day streak</div></div>
+      <div class="stat"><div class="stat-value" id="sessionStat">0</div><div class="stat-label">sessions</div></div>
+      <div class="stat"><div class="stat-value" id="minuteStat">0</div><div class="stat-label">minutes</div></div>
+    </div>
+  </section>
+</main>
+
+<dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="settingsTitle">Workout settings</div>
+      <button class="icon-btn" id="closeSettings" type="button" aria-label="Close settings">✕</button>
+    </div>
+
+    <div class="setting">
+      <div><div class="setting-name">Sound cues</div><div class="setting-sub">Start, 10-second warning, transitions and finish tones.</div></div>
+      <button class="switch on" data-setting="sound" type="button" aria-label="Toggle sound cues"></button>
+    </div>
+    <div class="setting">
+      <div><div class="setting-name">Voice coaching</div><div class="setting-sub">Announce exercise names and countdowns using Android text-to-speech.</div></div>
+      <button class="switch" data-setting="voice" type="button" aria-label="Toggle voice coaching"></button>
+    </div>
+    <div class="setting">
+      <div><div class="setting-name">Vibration cues</div><div class="setting-sub">Use phone haptics for transitions and countdowns when supported.</div></div>
+      <button class="switch" data-setting="vibe" type="button" aria-label="Toggle vibration cues"></button>
+    </div>
+    <div class="setting">
+      <div><div class="setting-name">Keep screen awake</div><div class="setting-sub">Use Android/browser wake lock when the platform allows it.</div></div>
+      <button class="switch on" data-setting="wake" type="button" aria-label="Toggle keep screen awake"></button>
+    </div>
+    <div class="setting">
+      <div><div class="setting-name">Halfway cue</div><div class="setting-sub">Cue at 1:00 remaining in each 2:00 station.</div></div>
+      <button class="switch on" data-setting="half" type="button" aria-label="Toggle halfway cue"></button>
+    </div>
+    <div class="setting">
+      <div><div class="setting-name">10-second warning</div><div class="setting-sub">Cue and optional voice countdown before each transition.</div></div>
+      <button class="switch on" data-setting="ten" type="button" aria-label="Toggle 10-second warning"></button>
+    </div>
+
+    <button class="btn btn-tonal sheet-close" id="historyBtn" type="button">View workout history</button>
+    <button class="btn btn-secondary sheet-close" id="closeSettings2" type="button">Done</button>
+  </div>
+</dialog>
+
+<dialog class="dialog" id="historyDialog" aria-labelledby="historyTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="historyTitle">Workout history</div>
+      <button class="icon-btn" id="closeHistory" type="button" aria-label="Close history">✕</button>
+    </div>
+    <div id="historyList"></div>
+    <button class="btn btn-secondary sheet-close" id="closeHistory2" type="button">Done</button>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+  const app = document.getElementById("app");
+  const $ = (id) => document.getElementById(id);
+  const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const SHORT_DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const TOTAL_MS = 15 * 60 * 1000;
+  const STATION_MS = 2 * 60 * 1000;
+  const WORK_STATIONS = 7;
+  const COOLDOWN_MS = 60 * 1000;
+
+  const routines = {
+    A: {
+      name: "Full Body A",
+      focus: "Squat • push • pull • hinge • press",
+      items: [
+        ["Goblet Squat","Keep chest tall; drive through the mid-foot."],
+        ["Flat Dumbbell Bench Press","Set your shoulders; lower with control."],
+        ["1-Arm Dumbbell Row","Brace your torso; pull the elbow toward your hip."],
+        ["Dumbbell Romanian Deadlift","Hinge at the hips; keep dumbbells close."],
+        ["Dumbbell Shoulder Press","Keep ribs down; press smoothly overhead."],
+        ["Reverse Lunges","Alternate legs; stay balanced and controlled."],
+        ["Curl + Overhead Triceps Extension","Controlled curls, then smooth overhead extensions."]
+      ]
+    },
+    B: {
+      name: "Full Body B",
+      focus: "Lunge • incline push • row • glutes",
+      items: [
+        ["Reverse Lunges","Keep the front knee tracking in line with the toes."],
+        ["Incline Dumbbell Press","Use a comfortable incline; control the descent."],
+        ["Chest-Supported Dumbbell Row","Let the bench support you; pull evenly."],
+        ["Dumbbell Hip Thrust","Drive through the heels; squeeze the glutes at the top."],
+        ["Dumbbell Lateral Raise","Use light weight; lead with the elbows."],
+        ["Goblet Squat","Brace your core and keep the descent controlled."],
+        ["Hammer Curl + Triceps Extension","Smooth reps; stop before form deteriorates."]
+      ]
+    },
+    R: {
+      name: "Recovery / Mobility",
+      focus: "Light movement • technique • breathing",
+      items: [
+        ["Bodyweight Squat","Easy pace; use a comfortable range of motion."],
+        ["Light Incline Dumbbell Press","Very light load; leave plenty in reserve."],
+        ["Light Dumbbell Row","Easy controlled pulls; no swinging."],
+        ["Light Dumbbell Romanian Deadlift","Practice the hinge pattern gently."],
+        ["Light Standing Dumbbell Press","Light effort; smooth overhead motion."],
+        ["Core Brace / Dead Bug","Move slowly; keep the trunk controlled."],
+        ["Full-Body Stretch & Breathing","Slow breathing; gradually unwind."]
+      ]
+    }
+  };
+
+  const schedule = {1:"A",2:"B",3:"R",4:"A",5:"B",6:"A",0:"R"};
+  const dayIndex = new Date().getDay();
+  const routineType = schedule[dayIndex];
+  const routine = routines[routineType];
+
+  const defaults = {
+    sound: true,
+    voice: false,
+    vibe: false,
+    wake: true,
+    half: true,
+    ten: true
+  };
+
+  let settings = {...defaults};
+  try {
+    const saved = JSON.parse(localStorage.getItem("lift15.settings") || "{}");
+    settings = {...defaults, ...saved};
+  } catch (_) {}
+
+  let weights = {};
+  let history = [];
+  try {
+    weights = JSON.parse(localStorage.getItem("lift15.weights") || "{}");
+    history = JSON.parse(localStorage.getItem("lift15.history") || "[]");
+    if (!Array.isArray(history)) history = [];
+  } catch (_) {}
+
+  let running = false;
+  let finished = false;
+  let elapsedBeforeStart = 0;
+  let startedAt = 0;
+  let frame = null;
+  let audioCtx = null;
+  let wakeLock = null;
+  let lastCueSecond = -1;
+  let lastStation = -1;
+  let warnedTen = false;
+  let halfwayCued = false;
+
+  const localDateKey = (date = new Date()) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth()+1).padStart(2,"0");
+    const d = String(date.getDate()).padStart(2,"0");
+    return `${y}-${m}-${d}`;
+  };
+
+  const save = (key,value) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {}
+  };
+
+  const formatClock = (ms) => {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+  };
+
+  const clamp = (n,min,max) => Math.min(max,Math.max(min,n));
+
+  function ensureAudio() {
+    try {
+      if (!audioCtx) {
+        const C = window.AudioContext || window.webkitAudioContext;
+        if (!C) return false;
+        audioCtx = new C();
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      return true;
+    } catch (_) { return false; }
+  }
+
+  function beep(frequency=880, duration=.11, volume=.065) {
+    if (!settings.sound || !ensureAudio()) return;
+    try {
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + .01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + duration + .03);
+    } catch (_) {}
+  }
+
+  function transitionTone() {
+    beep(820,.10,.06);
+    setTimeout(() => beep(1120,.15,.07), 120);
+  }
+
+  function startTone() {
+    beep(620,.10,.06);
+    setTimeout(() => beep(880,.15,.07), 115);
+  }
+
+  function finishTone() {
+    [620,820,1040,1320].forEach((f,i) => setTimeout(() => beep(f,.16,.075), i*145));
+  }
+
+  function vibrate(pattern) {
+    if (!settings.vibe || typeof navigator.vibrate !== "function") return;
+    try { navigator.vibrate(pattern); } catch (_) {}
+  }
+
+  function speak(text, priority=false) {
+    if (!settings.voice || !("speechSynthesis" in window)) return;
+    try {
+      if (priority) window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.02;
+      u.pitch = 1.0;
+      u.volume = .95;
+      window.speechSynthesis.speak(u);
+    } catch (_) {}
+  }
+
+  async function requestWakeLock() {
+    if (!settings.wake || !("wakeLock" in navigator)) return;
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+    } catch (_) { wakeLock = null; }
+  }
+
+  async function releaseWakeLock() {
+    try {
+      if (wakeLock) await wakeLock.release();
+    } catch (_) {}
+    wakeLock = null;
+  }
+
+  function currentState(elapsed) {
+    if (elapsed >= TOTAL_MS) return {type:"done", index:6, remaining:0};
+    if (elapsed >= WORK_STATIONS * STATION_MS) return {type:"cooldown", index:6, remaining:TOTAL_MS-elapsed};
+    const index = clamp(Math.floor(elapsed / STATION_MS),0,WORK_STATIONS-1);
+    return {type:"work", index, remaining:STATION_MS - (elapsed % STATION_MS)};
+  }
+
+  function updateRoutineList(state) {
+    $("completionChip").textContent = `${Math.min(WORK_STATIONS,state.type==="work"||state.type==="cooldown"?state.index:WORK_STATIONS)} / ${WORK_STATIONS}`;
+    document.querySelectorAll(".exercise-row").forEach((row,i) => {
+      row.classList.toggle("active", state.type==="work" && i===state.index);
+      row.classList.toggle("done", (state.type==="work" || state.type==="cooldown") && i<state.index);
+    });
+  }
+
+  function renderWeek() {
+    const completed = new Set(history.map(x => x.date));
+    const week = $("week");
+    week.innerHTML = "";
+    const today = new Date();
+    const mondayOffset = (today.getDay()+6)%7;
+    for (let i=0;i<7;i++) {
+      const di = (i+1)%7;
+      const date = new Date(today);
+      date.setDate(today.getDate() - mondayOffset + i);
+      const key = localDateKey(date);
+      const d = document.createElement("div");
+      d.className = "day" + (di===dayIndex ? " today" : "");
+      const plan = schedule[di];
+      d.innerHTML = `<div class="day-name">${SHORT_DAYS[di]}</div><div class="day-dot">${completed.has(key) ? "✓" : "•"}</div><div class="day-label">${plan==="A"?"A":plan==="B"?"B":"REC"}</div>`;
+      week.appendChild(d);
+    }
+  }
+
+  function renderHistory() {
+    const box = $("historyList");
+    if (!history.length) {
+      box.innerHTML = `<div class="small-note">No completed sessions yet. Finish a session and it will appear here.</div>`;
+      return;
+    }
+    box.innerHTML = "";
+    history.slice(0,14).forEach(item => {
+      const row = document.createElement("div");
+      row.className = "history-item";
+      const date = new Date(item.date+"T12:00:00");
+      row.innerHTML = `<div><div class="history-date">${new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric"}).format(date)}</div><div class="history-detail">${item.routine} • 15:00</div></div><div class="chip">✓ Done</div>`;
+      box.appendChild(row);
+    });
+  }
+
+  function calculateStats() {
+    const dates = new Set(history.map(x=>x.date));
+    let streak = 0;
+    const cursor = new Date();
+    if (!dates.has(localDateKey(cursor))) cursor.setDate(cursor.getDate()-1);
+    while (dates.has(localDateKey(cursor))) { streak++; cursor.setDate(cursor.getDate()-1); }
+    $("streakStat").textContent = String(streak);
+    $("sessionStat").textContent = String(history.length);
+    $("minuteStat").textContent = String(history.length*15);
+  }
+
+  function render() {
+    const elapsed = getElapsed();
+    const state = currentState(elapsed);
+    $("timer").textContent = formatClock(TOTAL_MS-elapsed);
+
+    const angle = clamp(((state.type==="done"?0:TOTAL_MS-elapsed) / TOTAL_MS) * 360,0,360);
+    $("ring").style.setProperty("--angle", `${angle}deg`);
+
+    if (finished) {
+      $("timerCard").classList.remove("training");
+      $("phase").textContent = "Complete";
+      $("station").textContent = "15:00 finished";
+      $("currentExercise").textContent = "Workout complete";
+      $("currentHint").textContent = "Recover, hydrate, and come back tomorrow.";
+      $("nextRow").classList.add("hidden");
+      $("startBtn").textContent = "Start again";
+      $("startBtn").disabled = false;
+    } else if (state.type === "cooldown") {
+      $("timerCard").classList.toggle("training", running);
+      $("phase").textContent = "Cooldown";
+      $("station").textContent = "Final 1:00";
+      $("currentExercise").textContent = "Full-Body Stretch & Breathing";
+      $("currentHint").textContent = "Slow down, breathe, and let the session finish.";
+      $("nextRow").classList.add("hidden");
+      $("startBtn").textContent = running ? "Workout running" : "Resume";
+    } else if (running || elapsed > 0) {
+      $("timerCard").classList.toggle("training", running);
+      $("phase").textContent = "Work";
+      $("station").textContent = `Station ${state.index+1} of ${WORK_STATIONS}`;
+      $("currentExercise").textContent = routine.items[state.index][0];
+      $("currentHint").textContent = routine.items[state.index][1];
+      const next = state.index + 1 < WORK_STATIONS ? routine.items[state.index+1][0] : "Cooldown";
+      $("nextExercise").textContent = next;
+      $("nextTime").textContent = state.index + 1 < WORK_STATIONS ? "2:00" : "1:00";
+      $("nextRow").classList.remove("hidden");
+      $("startBtn").textContent = running ? "Workout running" : "Resume";
+    } else {
+      $("timerCard").classList.remove("training");
+      $("phase").textContent = "Ready";
+      $("station").textContent = "7 × 2:00 + 1:00 finish";
+      $("currentExercise").textContent = routine.items[0][0];
+      $("currentHint").textContent = routine.items[0][1];
+      $("nextExercise").textContent = routine.items[1][0];
+      $("nextTime").textContent = "2:00";
+      $("nextRow").classList.remove("hidden");
+      $("startBtn").textContent = "Start workout";
+    }
+
+    const stateForList = finished ? {type:"cooldown",index:7} : state;
+    updateRoutineList(stateForList);
+
+    if (state.type==="work" && !finished) {
+      const secondsLeft = Math.ceil(state.remaining/1000);
+      if (secondsLeft !== lastCueSecond) {
+        lastCueSecond = secondsLeft;
+        if (settings.ten && state.remaining <= 10000 && state.remaining > 0 && !warnedTen) {
+          warnedTen = true;
+          beep(1200,.08,.05); vibrate([70,70,70]); speak("10 seconds",true);
+        }
+        if (state.remaining <= 3000 && state.remaining > 0 && settings.ten) {
+          beep(1350,.07,.045); vibrate(40);
+          if (settings.voice) speak(String(secondsLeft),true);
+        }
+        if (settings.half && !halfwayCued && state.remaining <= 60000 && state.remaining > 59000) {
+          halfwayCued = true;
+          beep(980,.11,.055); vibrate(55); speak("Halfway",false);
+        }
+      }
+      if (state.index !== lastStation) {
+        lastStation = state.index;
+      }
+    }
+
+    $("pauseBtn").disabled = !running;
+    $("skipBtn").disabled = !running;
+  }
+
+  function getElapsed() {
+    if (!running) return elapsedBeforeStart;
+    return clamp(elapsedBeforeStart + (Date.now()-startedAt),0,TOTAL_MS);
+  }
+
+  function prepareIntervalCues() {
+    warnedTen = false;
+    halfwayCued = false;
+    lastCueSecond = -1;
+  }
+
+  function loop() {
+    if (!running) return;
+    const elapsed = getElapsed();
+    if (elapsed >= TOTAL_MS) {
+      finishWorkout();
+      return;
+    }
+    render();
+    frame = requestAnimationFrame(loop);
+  }
+
+  function startWorkout() {
+    if (finished) {
+      finished = false;
+      elapsedBeforeStart = 0;
+      lastStation = -1;
+    }
+    ensureAudio();
+    if (settings.voice) speak(`Starting. ${routine.items[0][0]}.`,true);
+    startTone();
+    vibrate([45,65,45]);
+    running = true;
+    startedAt = Date.now();
+    prepareIntervalCues();
+    $("status").textContent = `Go — ${routine.items[0][0]}.`;
+    requestWakeLock();
+    render();
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(loop);
+  }
+
+  function pauseWorkout() {
+    if (!running) return;
+    elapsedBeforeStart = getElapsed();
+    running = false;
+    cancelAnimationFrame(frame);
+    frame = null;
+    releaseWakeLock();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    $("status").textContent = `Paused — ${formatClock(TOTAL_MS-elapsedBeforeStart)} remaining.`;
+    render();
+  }
+
+  function resetWorkout() {
+    running = false;
+    finished = false;
+    elapsedBeforeStart = 0;
+    startedAt = 0;
+    cancelAnimationFrame(frame);
+    frame = null;
+    releaseWakeLock();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    prepareIntervalCues();
+    $("status").textContent = "Ready when you are.";
+    render();
+  }
+
+  function skipInterval() {
+    if (!running) return;
+    const current = getElapsed();
+    const state = currentState(current);
+    let next = current;
+    if (state.type==="work") {
+      next = Math.min(TOTAL_MS, (state.index+1)*STATION_MS);
+    } else if (state.type==="cooldown") {
+      next = TOTAL_MS;
+    }
+    elapsedBeforeStart = next;
+    startedAt = Date.now();
+    prepareIntervalCues();
+    transitionTone();
+    vibrate([65,75,65]);
+    if (next>=TOTAL_MS) { finishWorkout(); return; }
+    const newState = currentState(next);
+    if (newState.type==="work") speak(`Next. ${routine.items[newState.index][0]}.`,true);
+    $("status").textContent = `Skipped to ${formatClock(TOTAL_MS-next)} remaining.`;
+    render();
+  }
+
+  function finishWorkout() {
+    const wasRunning = running;
+    running = false;
+    elapsedBeforeStart = TOTAL_MS;
+    finished = true;
+    cancelAnimationFrame(frame);
+    frame = null;
+    releaseWakeLock();
+    if (wasRunning) finishTone();
+    vibrate([100,70,100,70,180]);
+    if (settings.voice) speak("Workout complete. Nice work. Recover and hydrate.",true);
+
+    const today = localDateKey();
+    if (!history.some(x=>x.date===today)) {
+      history.unshift({date:today,routine:routine.name});
+      history = history.slice(0,60);
+      save("lift15.history",history);
+    }
+    calculateStats();
+    renderWeek();
+    renderHistory();
+    $("status").textContent = "15:00 completed.";
+    render();
+  }
+
+  function setSetting(key, value) {
+    settings[key] = !!value;
+    save("lift15.settings",settings);
+    syncSettingButtons();
+    $("soundToggle").classList.toggle("on",settings.sound);
+    $("voiceToggle").classList.toggle("on",settings.voice);
+    $("vibeToggle").classList.toggle("on",settings.vibe);
+  }
+
+  function syncSettingButtons() {
+    document.querySelectorAll(".switch").forEach(btn => {
+      const key = btn.dataset.setting;
+      btn.classList.toggle("on",!!settings[key]);
+      btn.setAttribute("aria-pressed",String(!!settings[key]));
+    });
+  }
+
+  function syncLoad() {
+    const state = currentState(getElapsed());
+    const idx = state.type==="cooldown" ? 6 : state.index;
+    const key = `${routineType}:${idx}`;
+    const value = Number.isFinite(Number(weights[key])) ? weights[key] : "";
+    $("loadInput").value = value;
+  }
+
+  function saveLoad() {
+    const raw = $("loadInput").value.trim();
+    if (raw==="") return;
+    const n = clamp(Number(raw),0,500);
+    if (!Number.isFinite(n)) return;
+    const state = currentState(getElapsed());
+    const idx = state.type==="cooldown" ? 6 : state.index;
+    weights[`${routineType}:${idx}`] = n;
+    save("lift15.weights",weights);
+    $("status").textContent = `Saved ${n} kg for ${routine.items[idx][0]}.`;
+  }
+
+  function buildRoutine() {
+    $("dateLabel").textContent = new Intl.DateTimeFormat(undefined,{weekday:"long",month:"long",day:"numeric"}).format(new Date());
+    $("routineName").textContent = routine.name;
+    $("routineFocus").textContent = routine.focus;
+    $("dayChip").textContent = routineType==="R" ? "RECOVERY" : `DAY ${routineType}`;
+    const list = $("routineList");
+    list.innerHTML = "";
+    routine.items.forEach((item,i) => {
+      const row = document.createElement("div");
+      row.className = "exercise-row";
+      row.dataset.index = String(i);
+      row.innerHTML = `<div class="row-num">${i+1}</div><div class="row-main"><div class="row-title"></div><div class="row-meta">Controlled effort • 2:00</div></div><div class="row-time">2:00</div>`;
+      row.querySelector(".row-title").textContent = item[0];
+      list.appendChild(row);
+    });
+  }
+
+  $("startBtn").addEventListener("click", () => running ? null : startWorkout());
+  $("pauseBtn").addEventListener("click", pauseWorkout);
+  $("skipBtn").addEventListener("click", skipInterval);
+  $("loadInput").addEventListener("change", saveLoad);
+  $("loadInput").addEventListener("blur", saveLoad);
+
+  $("soundToggle").addEventListener("click",() => setSetting("sound",!settings.sound));
+  $("voiceToggle").addEventListener("click",() => setSetting("voice",!settings.voice));
+  $("vibeToggle").addEventListener("click",() => setSetting("vibe",!settings.vibe));
+
+  const settingsDialog = $("settingsDialog");
+  const historyDialog = $("historyDialog");
+  $("settingsBtn").addEventListener("click",() => {syncSettingButtons();settingsDialog.showModal();});
+  $("closeSettings").addEventListener("click",()=>settingsDialog.close());
+  $("closeSettings2").addEventListener("click",()=>settingsDialog.close());
+  $("historyBtn").addEventListener("click",()=>{renderHistory();settingsDialog.close();historyDialog.showModal();});
+  $("closeHistory").addEventListener("click",()=>historyDialog.close());
+  $("closeHistory2").addEventListener("click",()=>historyDialog.close());
+
+  document.querySelectorAll(".switch").forEach(btn => {
+    btn.addEventListener("click",() => setSetting(btn.dataset.setting,!settings[btn.dataset.setting]));
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      if (running && settings.wake && !wakeLock) requestWakeLock();
+      render();
+    }
+  });
+
+  app.addEventListener("keydown",e => {
+    const tag = (e.target.tagName || "").toLowerCase();
+    if (["input","textarea","select"].includes(tag)) return;
+    if (e.code==="Space") { e.preventDefault(); running ? pauseWorkout() : startWorkout(); }
+    if (e.key.toLowerCase()==="r") { e.preventDefault(); resetWorkout(); }
+    if (e.key.toLowerCase()==="s" && running) { e.preventDefault(); skipInterval(); }
+  });
+
+  buildRoutine();
+  syncSettingButtons();
+  syncLoad();
+  calculateStats();
+  renderWeek();
+  renderHistory();
+  render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
