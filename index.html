@@ -228,6 +228,36 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important;transition:none!important}
 }
+
+/* v2: beginner learning + weekly peek */
+.guide-btn{margin:13px auto 0;display:flex;align-items:center;justify-content:center;gap:7px}
+.learn-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.learn-row{display:flex;align-items:center;gap:11px;width:100%;padding:12px;border-radius:16px;border:1px solid var(--md-outline-variant);background:var(--md-surface);color:var(--md-on-surface);text-align:left;cursor:pointer}
+.learn-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:var(--md-secondary-container);font-size:21px;flex:none}
+.learn-main{min-width:0;flex:1}.learn-title{font-size:14px;font-weight:700}.learn-meta{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+.search-box{width:100%;height:46px;border-radius:14px;border:1px solid var(--md-outline);background:var(--md-surface);color:var(--md-on-surface);padding:0 14px;font-size:16px;margin-bottom:10px}
+.week .day{cursor:pointer;border:1px solid transparent}.week .day:active{transform:scale(.98)}
+.peek-summary{padding:13px 14px;border-radius:16px;background:var(--md-secondary-container);margin-bottom:12px}
+.peek-title{font-size:19px;font-weight:760}.peek-sub{font-size:13px;color:var(--md-on-secondary-container);margin-top:3px}
+.peek-list{display:flex;flex-direction:column;gap:8px}
+.peek-row{display:flex;align-items:center;gap:10px;padding:11px;border-radius:15px;background:var(--md-surface);border:1px solid var(--md-outline-variant);cursor:pointer;text-align:left;width:100%;color:var(--md-on-surface)}
+.peek-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--md-surface-container-highest);font-size:12px;font-weight:750;flex:none}
+.peek-main{min-width:0;flex:1}.peek-name{font-size:14px;font-weight:680}.peek-meta{font-size:12px;color:var(--md-on-surface-variant);margin-top:2px}
+.guide-hero{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:var(--md-primary-container);margin-bottom:13px}
+.guide-emoji{font-size:38px;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:var(--md-surface)}
+.guide-name{font-size:21px;font-weight:780;line-height:1.08}.guide-targets{font-size:12px;color:var(--md-on-primary-container);margin-top:4px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
+.step{padding:10px 8px;border-radius:14px;background:var(--md-surface);border:1px solid var(--md-outline-variant);text-align:center}
+.step-icon{font-size:22px}.step-label{font-size:11px;font-weight:750;margin-top:4px}.step-text{font-size:11px;color:var(--md-on-surface-variant);line-height:1.3;margin-top:3px}
+.guide-section{margin-top:14px}.guide-section-title{font-size:14px;font-weight:760;margin-bottom:6px}.guide-section p{font-size:13px;line-height:1.5;color:var(--md-on-surface-variant);margin:0}
+.guide-bullets{margin:0;padding-left:19px;color:var(--md-on-surface-variant);font-size:13px;line-height:1.55}
+.tip-box{margin-top:13px;padding:12px 13px;border-radius:15px;background:color-mix(in srgb,var(--md-primary) 9%,transparent);font-size:13px;line-height:1.45}
+.danger-box{margin-top:9px;padding:12px 13px;border-radius:15px;background:color-mix(in srgb,#ba1a1a 9%,transparent);font-size:13px;line-height:1.45}
+.beginner-banner{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:18px;background:var(--md-surface-container-high)}
+.beginner-icon{font-size:25px}.beginner-banner strong{font-size:15px}.beginner-banner p{margin:4px 0 0;font-size:12px;color:var(--md-on-surface-variant);line-height:1.45}
+.day-peek-label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:750;color:var(--md-on-surface-variant);margin:0 0 9px}
+@media(max-width:420px){.steps{grid-template-columns:1fr}.step{display:grid;grid-template-columns:32px 1fr;text-align:left;column-gap:8px;align-items:center}.step-icon{grid-row:1/3}.step-label{margin:0}.step-text{margin:0}}
+
 </style>
 
 <link rel="manifest" href="./manifest.webmanifest">
@@ -278,6 +308,7 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
 
     <div class="exercise-title" id="currentExercise">Press start to begin</div>
     <div class="exercise-hint" id="currentHint">Use controlled reps and stop a set if your form breaks down.</div>
+    <button class="btn btn-secondary guide-btn" id="currentGuideBtn" type="button">📖 How to do it</button>
 
     <div class="next-row" id="nextRow">
       <div><div class="next-label">Next</div><div class="next-name" id="nextExercise">—</div></div>
@@ -320,6 +351,24 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
   </section>
 
   <section class="card section">
+    <div class="beginner-banner">
+      <div class="beginner-icon">👋</div>
+      <div>
+        <strong>New to dumbbell training?</strong>
+        <p>Learn each movement before your first session. Every exercise below has beginner instructions, key form points, breathing cues and common mistakes.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card section" id="exerciseLibrarySection">
+    <div class="section-head">
+      <div><div class="section-title">Exercise library</div><div class="section-sub">Tap any exercise to learn it</div></div>
+    </div>
+    <input class="search-box" id="exerciseSearch" type="search" placeholder="Search exercises…" aria-label="Search exercises">
+    <div class="learn-grid" id="exerciseLibrary"></div>
+  </section>
+
+  <section class="card section">
     <div class="section-head">
       <div><div class="section-title">Progress</div><div class="section-sub">Saved on this device</div></div>
     </div>
@@ -330,6 +379,55 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
     </div>
   </section>
 </main>
+
+
+<dialog class="dialog" id="peekDialog" aria-labelledby="peekTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="peekTitle">Workout preview</div>
+      <button class="icon-btn" id="closePeek" type="button" aria-label="Close workout preview">✕</button>
+    </div>
+    <div id="peekContent"></div>
+    <button class="btn btn-secondary sheet-close" id="closePeek2" type="button">Done</button>
+  </div>
+</dialog>
+
+<dialog class="dialog" id="guideDialog" aria-labelledby="guideTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="guideTitle">Exercise guide</div>
+      <button class="icon-btn" id="closeGuide" type="button" aria-label="Close exercise guide">✕</button>
+    </div>
+    <div id="guideContent"></div>
+    <button class="btn btn-secondary sheet-close" id="closeGuide2" type="button">Done</button>
+  </div>
+</dialog>
+
+<dialog class="dialog" id="welcomeDialog" aria-labelledby="welcomeTitle">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="welcomeTitle">Welcome to Lift 15</div>
+    </div>
+    <div class="beginner-banner">
+      <div class="beginner-icon">🏋️</div>
+      <div>
+        <strong>First time lifting?</strong>
+        <p>You don't need to know the exercises yet. Lift 15 now includes a built-in exercise guide and a weekly preview so you can learn at your own pace.</p>
+      </div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title">Before your first workout</div>
+      <ul class="guide-bullets">
+        <li>Start with a light, comfortable dumbbell.</li>
+        <li>Open <b>How to do it</b> whenever a movement is unfamiliar.</li>
+        <li>Prioritize smooth, controlled reps over heavy weight.</li>
+        <li>Stop if you feel sharp or unusual pain.</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary sheet-close" id="welcomeExercises" type="button">Explore exercises</button>
+    <button class="btn btn-tonal sheet-close" id="welcomeStart" type="button">Start today's workout</button>
+  </div>
+</dialog>
 
 <dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
   <div class="sheet">
@@ -430,6 +528,257 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
         ["Core Brace / Dead Bug","Move slowly; keep the trunk controlled."],
         ["Full-Body Stretch & Breathing","Slow breathing; gradually unwind."]
       ]
+    }
+  };
+
+
+  const exerciseGuides = {
+    "Goblet Squat": {
+      emoji:"🏋️", targets:"Quads • glutes • core",
+      setup:"Hold one dumbbell vertically at your chest with both hands. Stand about shoulder-width apart with feet comfortable and toes slightly turned out.",
+      steps:[
+        ["🧍","Set up","Chest tall; DB close to chest."],
+        ["⬇️","Squat","Sit hips down and back; knees track over toes."],
+        ["⬆️","Stand","Push through the floor and stand tall."]
+      ],
+      breathe:"Breathe in as you lower; breathe out as you stand.",
+      mistakes:["Knees collapsing inward","Heels lifting","Rushing the bottom"],
+      tip:"Use a smaller range of motion at first. Depth can improve as mobility and confidence improve.",
+      safety:"Keep the dumbbell close and your spine comfortable. Never force a painful depth."
+    },
+    "Flat Dumbbell Bench Press": {
+      emoji:"🏋️", targets:"Chest • triceps • front shoulders",
+      setup:"Lie on the flat bench with feet planted. Hold one dumbbell in each hand above your chest.",
+      steps:[
+        ["🛏️","Set up","Shoulder blades gently pulled back; feet firm."],
+        ["⬇️","Lower","Lower DBs toward the sides of your chest with control."],
+        ["⬆️","Press","Press up without aggressively locking elbows."]
+      ],
+      breathe:"Breathe in on the way down; breathe out as you press.",
+      mistakes:["Elbows flaring straight sideways","Bouncing at the bottom","Losing foot or shoulder position"],
+      tip:"Start lighter than you think. Learn a stable path before adding weight.",
+      safety:"Use a weight you can control safely. If getting the dumbbells into position is difficult, reduce the load."
+    },
+    "1-Arm Dumbbell Row": {
+      emoji:"↩️", targets:"Upper back • lats • biceps",
+      setup:"Support one hand on the bench. Step the same-side knee or both feet into a stable position and keep your torso braced.",
+      steps:[
+        ["🧱","Brace","Keep back neutral and shoulders level."],
+        ["⬆️","Pull","Drive the elbow back toward your hip."],
+        ["⬇️","Lower","Lower slowly without twisting your torso."]
+      ],
+      breathe:"Breathe out as you pull; breathe in as you lower.",
+      mistakes:["Shrugging the shoulder","Twisting to lift the weight","Jerking the dumbbell"],
+      tip:"Imagine your hand is a hook and your elbow is doing the work.",
+      safety:"Use a stable bench position and avoid rounding or twisting your lower back."
+    },
+    "Dumbbell Romanian Deadlift": {
+      emoji:"↘️", targets:"Hamstrings • glutes • back muscles",
+      setup:"Stand tall with dumbbells in front of your thighs. Keep a soft bend in the knees.",
+      steps:[
+        ["🧍","Set up","Shoulders relaxed; DBs close to thighs."],
+        ["↘️","Hinge","Push hips back while DBs slide down your legs."],
+        ["⬆️","Stand","Drive hips forward and stand tall."]
+      ],
+      breathe:"Breathe in as you hinge; breathe out as you return.",
+      mistakes:["Squatting instead of hinging","Rounding the back","Letting DBs drift away"],
+      tip:"Stop the descent when your hamstrings feel loaded and your back can stay neutral.",
+      safety:"This is a hip hinge, not a race to touch the floor. Range of motion should match your mobility."
+    },
+    "Dumbbell Shoulder Press": {
+      emoji:"⬆️", targets:"Shoulders • triceps • upper chest",
+      setup:"Sit or stand tall with dumbbells near shoulder height. Brace your trunk and keep ribs from flaring.",
+      steps:[
+        ["🧍","Set up","DBs at shoulders; wrists stacked."],
+        ["⬆️","Press","Press smoothly overhead in a comfortable path."],
+        ["⬇️","Lower","Return to shoulder height under control."]
+      ],
+      breathe:"Breathe out as you press; breathe in as you lower.",
+      mistakes:["Overarching the lower back","Shrugging hard","Using momentum"],
+      tip:"Use lighter weights than your bench press. Smooth reps matter more than height.",
+      safety:"Stop short of a painful range and avoid forcing your shoulders overhead."
+    },
+    "Reverse Lunges": {
+      emoji:"🚶", targets:"Quads • glutes • balance",
+      setup:"Stand tall with feet about hip-width apart. Hold dumbbells by your sides if comfortable.",
+      steps:[
+        ["🧍","Set up","Brace gently and look forward."],
+        ["⬅️","Step back","Step one foot back and lower under control."],
+        ["⬆️","Return","Push through the front foot and come back up."]
+      ],
+      breathe:"Breathe in as you lower; breathe out as you stand.",
+      mistakes:["Front knee collapsing inward","Taking an unstable step","Dropping quickly"],
+      tip:"Use bodyweight first if balance is challenging.",
+      safety:"Keep enough space around you. Hold onto support during practice if needed."
+    },
+    "Curl + Overhead Triceps Extension": {
+      emoji:"💪", targets:"Biceps • triceps",
+      setup:"Stand tall with a dumbbell in each hand. Perform controlled curls, then use a comfortable weight for the overhead extension.",
+      steps:[
+        ["💪","Curl","Bend elbows without swinging your torso."],
+        ["🔄","Switch","Bring DBs safely to the overhead position."],
+        ["⬇️","Extend","Bend elbows, then extend smoothly overhead."]
+      ],
+      breathe:"Breathe out during the lifting portion; breathe in during the lowering portion.",
+      mistakes:["Swinging the weights","Flaring elbows","Using a load that is too heavy"],
+      tip:"Treat this as two separate movements joined together. Reduce weight if either movement loses form.",
+      safety:"Keep elbows comfortable and avoid forcing shoulder or elbow range."
+    },
+    "Incline Dumbbell Press": {
+      emoji:"📐", targets:"Upper chest • triceps • shoulders",
+      setup:"Set the bench to a moderate incline, roughly 30–45°. Sit back with dumbbells near chest level.",
+      steps:[
+        ["📐","Set bench","Use a comfortable moderate incline."],
+        ["⬇️","Lower","Lower DBs toward upper chest with control."],
+        ["⬆️","Press","Press up smoothly without bouncing."]
+      ],
+      breathe:"Breathe in down; breathe out up.",
+      mistakes:["Bench too steep","Elbows excessively flared","Dropping the DBs"],
+      tip:"A moderate incline is usually easier to control than a near-upright bench.",
+      safety:"Check the bench lock before starting and use a manageable load."
+    },
+    "Chest-Supported Dumbbell Row": {
+      emoji:"🪑", targets:"Upper back • lats • biceps",
+      setup:"Set the bench to a supportive incline. Lie chest-down with feet stable and dumbbells hanging below you.",
+      steps:[
+        ["🪑","Set up","Chest supported; neck relaxed."],
+        ["⬆️","Row","Pull elbows back toward your sides."],
+        ["⬇️","Lower","Lower DBs slowly to a comfortable reach."]
+      ],
+      breathe:"Breathe out as you row; breathe in as you lower.",
+      mistakes:["Shrugging","Lifting with momentum","Lifting the chest off the bench"],
+      tip:"The bench removes much of the balance demand, making this a beginner-friendly row.",
+      safety:"Make sure the bench is securely locked before lying on it."
+    },
+    "Dumbbell Hip Thrust": {
+      emoji:"🍑", targets:"Glutes • hamstrings",
+      setup:"Upper back rests against a secure bench. Place a dumbbell across the hips with hands stabilizing it.",
+      steps:[
+        ["🪑","Set up","Shoulders supported; feet planted."],
+        ["⬆️","Drive","Push through heels and lift hips."],
+        ["⏸️","Squeeze","Pause briefly at the top, then lower."]
+      ],
+      breathe:"Breathe out as you lift; breathe in as you lower.",
+      mistakes:["Overarching the lower back","Feet too far away","Dropping quickly"],
+      tip:"Start bodyweight-only to learn the top position and foot placement.",
+      safety:"Pad the dumbbell if needed and make sure the bench is stable."
+    },
+    "Dumbbell Lateral Raise": {
+      emoji:"↔️", targets:"Side shoulders",
+      setup:"Stand tall with light dumbbells at your sides. Keep a soft bend in the elbows.",
+      steps:[
+        ["🧍","Set up","Light DBs; shoulders relaxed."],
+        ["↔️","Raise","Lift arms out to the sides under control."],
+        ["⬇️","Lower","Lower slowly without swinging."]
+      ],
+      breathe:"Breathe out as you raise; breathe in as you lower.",
+      mistakes:["Using too much weight","Shrugging","Swinging the body"],
+      tip:"This movement usually needs very light dumbbells. Quality beats load.",
+      safety:"Stay in a pain-free shoulder range."
+    },
+    "Hammer Curl + Triceps Extension": {
+      emoji:"💪", targets:"Biceps • brachialis • triceps",
+      setup:"Use a neutral hammer grip for curls. Then transition carefully to the triceps-extension position.",
+      steps:[
+        ["🔨","Curl","Palms face inward; curl without swinging."],
+        ["🔄","Switch","Move carefully to the extension setup."],
+        ["⬇️","Extend","Bend and extend the elbows smoothly."]
+      ],
+      breathe:"Breathe out during each lift; breathe in while lowering.",
+      mistakes:["Swinging","Elbows drifting excessively","Too much weight"],
+      tip:"Keep the movement slow enough that you could stop at any point.",
+      safety:"Use a lighter load if the overhead position is uncomfortable."
+    },
+    "Bodyweight Squat": {
+      emoji:"🧍", targets:"Legs • glutes • mobility",
+      setup:"Stand with feet comfortable and toes slightly out. Keep arms where they help balance.",
+      steps:[
+        ["🧍","Set up","Brace gently and keep chest relaxed."],
+        ["⬇️","Squat","Sit hips down and back to a comfortable depth."],
+        ["⬆️","Stand","Push through the floor and stand tall."]
+      ],
+      breathe:"Easy steady breathing throughout.",
+      mistakes:["Knees collapsing inward","Heels lifting","Forcing depth"],
+      tip:"Recovery day means easy. You should finish feeling better, not exhausted.",
+      safety:"Use a wall or bench for balance if needed."
+    },
+    "Light Incline Dumbbell Press": {
+      emoji:"📐", targets:"Chest • shoulders • triceps",
+      setup:"Use a light load and moderate bench incline. This is a technique/recovery movement, not a max-effort set.",
+      steps:[
+        ["📐","Set up","Moderate incline; light DBs."],
+        ["⬇️","Lower","Slow, comfortable descent."],
+        ["⬆️","Press","Easy smooth press; leave plenty in reserve."]
+      ],
+      breathe:"Steady breathing; never strain.",
+      mistakes:["Turning recovery into a hard set","Rushing","Using heavy weight"],
+      tip:"You should have many good reps left when the interval ends.",
+      safety:"Reduce the load immediately if shoulders feel irritated."
+    },
+    "Light Dumbbell Row": {
+      emoji:"↩️", targets:"Upper back • lats",
+      setup:"Use a very light load and a stable supported row position.",
+      steps:[
+        ["🧱","Brace","Keep torso stable."],
+        ["⬆️","Pull","Bring elbow toward the hip."],
+        ["⬇️","Lower","Return slowly."]
+      ],
+      breathe:"Smooth, relaxed breathing.",
+      mistakes:["Swinging","Shrugging","Chasing fatigue"],
+      tip:"Think practice, not performance.",
+      safety:"Keep the spine comfortable and stop if you feel unusual pain."
+    },
+    "Light Dumbbell Romanian Deadlift": {
+      emoji:"↘️", targets:"Hamstrings • glutes • hinge technique",
+      setup:"Use very light dumbbells and practice the hip hinge.",
+      steps:[
+        ["🧍","Set up","Soft knees; DBs near thighs."],
+        ["↘️","Hinge","Hips move back; chest stays controlled."],
+        ["⬆️","Stand","Return smoothly."]
+      ],
+      breathe:"Relaxed breathing throughout.",
+      mistakes:["Going too deep","Rounding the back","Turning it into a squat"],
+      tip:"The goal is to rehearse the hinge pattern.",
+      safety:"Keep the range small if hamstrings or back feel tight."
+    },
+    "Light Standing Dumbbell Press": {
+      emoji:"⬆️", targets:"Shoulders • triceps",
+      setup:"Stand tall with very light dumbbells at shoulder height.",
+      steps:[
+        ["🧍","Set up","Ribs down; shoulders relaxed."],
+        ["⬆️","Press","Smooth overhead movement."],
+        ["⬇️","Lower","Return gently."]
+      ],
+      breathe:"Easy breathing; no straining.",
+      mistakes:["Leaning back","Heavy weight","Shrugging"],
+      tip:"Recovery pressing should feel easy and crisp.",
+      safety:"Stay within a comfortable shoulder range."
+    },
+    "Core Brace / Dead Bug": {
+      emoji:"🧠", targets:"Core • trunk control",
+      setup:"For dead bug, lie on your back with knees bent and arms up. Brace gently so your lower back stays comfortable.",
+      steps:[
+        ["🛏️","Set up","Back comfortable; ribs relaxed."],
+        ["↔️","Move","Slowly extend opposite arm and leg."],
+        ["↩️","Return","Come back to center and switch sides."]
+      ],
+      breathe:"Slow breathing; exhale gently during each extension.",
+      mistakes:["Arching the lower back","Moving too fast","Holding the breath"],
+      tip:"Shorter limb movement is fine. Control is the goal.",
+      safety:"Use a smaller range if your back cannot stay comfortable."
+    },
+    "Full-Body Stretch & Breathing": {
+      emoji:"🧘", targets:"Recovery • breathing • gentle mobility",
+      setup:"Move into comfortable stretches for the areas you trained. Keep everything gentle and pain-free.",
+      steps:[
+        ["🧘","Settle","Choose a comfortable position."],
+        ["🌬️","Breathe","Slow inhale; longer relaxed exhale."],
+        ["↔️","Move","Gentle stretches; no bouncing."]
+      ],
+      breathe:"Slow nasal inhale if comfortable; relaxed longer exhale.",
+      mistakes:["Forcing a stretch","Bouncing","Holding your breath"],
+      tip:"Cooldown should reduce tension, not create it.",
+      safety:"Stay in a comfortable range and stop any stretch that causes sharp pain."
     }
   };
 
@@ -590,10 +939,13 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       const date = new Date(today);
       date.setDate(today.getDate() - mondayOffset + i);
       const key = localDateKey(date);
-      const d = document.createElement("div");
+      const d = document.createElement("button");
+      d.type = "button";
       d.className = "day" + (di===dayIndex ? " today" : "");
       const plan = schedule[di];
-      d.innerHTML = `<div class="day-name">${SHORT_DAYS[di]}</div><div class="day-dot">${completed.has(key) ? "✓" : "•"}</div><div class="day-label">${plan==="A"?"A":plan==="B"?"B":"REC"}</div>`;
+      const label = plan==="A"?"A":plan==="B"?"B":"REC";
+      d.innerHTML = `<div class="day-name">${SHORT_DAYS[di]}</div><div class="day-dot">${completed.has(key) ? "✓" : "•"}</div><div class="day-label">${label}</div>`;
+      d.addEventListener("click", () => openPeek(plan, DAY_NAMES[di], date, di===dayIndex));
       week.appendChild(d);
     }
   }
@@ -625,6 +977,89 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
     $("minuteStat").textContent = String(history.length*15);
   }
 
+
+  function openGuide(name) {
+    const g = exerciseGuides[name];
+    if (!g) return;
+    $("guideTitle").textContent = name;
+    const steps = g.steps.map(s => `<div class="step"><div class="step-icon">${s[0]}</div><div class="step-label">${s[1]}</div><div class="step-text">${s[2]}</div></div>`).join("");
+    $("guideContent").innerHTML = `
+      <div class="guide-hero">
+        <div class="guide-emoji">${g.emoji}</div>
+        <div><div class="guide-name">${name}</div><div class="guide-targets">${g.targets}</div></div>
+      </div>
+      <div class="guide-section"><div class="guide-section-title">1. Starting position</div><p>${g.setup}</p></div>
+      <div class="guide-section"><div class="guide-section-title">2. Movement</div><div class="steps">${steps}</div></div>
+      <div class="guide-section"><div class="guide-section-title">Breathing</div><p>${g.breathe}</p></div>
+      <div class="guide-section"><div class="guide-section-title">Common mistakes</div><ul class="guide-bullets">${g.mistakes.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+      <div class="tip-box"><b>💡 Beginner tip:</b> ${g.tip}</div>
+      <div class="danger-box"><b>⚠️ Safety:</b> ${g.safety}</div>
+    `;
+    $("guideDialog").showModal();
+  }
+
+  function allExerciseNames() {
+    return Object.keys(exerciseGuides);
+  }
+
+  function renderExerciseLibrary(filter="") {
+    const q = filter.trim().toLowerCase();
+    const box = $("exerciseLibrary");
+    box.innerHTML = "";
+    const names = allExerciseNames().filter(name => {
+      if (!q) return true;
+      const g = exerciseGuides[name];
+      return name.toLowerCase().includes(q) || g.targets.toLowerCase().includes(q);
+    });
+    if (!names.length) {
+      box.innerHTML = `<div class="small-note">No exercises match “${filter}”.</div>`;
+      return;
+    }
+    names.forEach(name => {
+      const g = exerciseGuides[name];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "learn-row";
+      b.innerHTML = `<div class="learn-icon">${g.emoji}</div><div class="learn-main"><div class="learn-title"></div><div class="learn-meta"></div></div><div aria-hidden="true">›</div>`;
+      b.querySelector(".learn-title").textContent = name;
+      b.querySelector(".learn-meta").textContent = g.targets;
+      b.addEventListener("click", () => openGuide(name));
+      box.appendChild(b);
+    });
+  }
+
+  function openPeek(type, dayName, date, isToday) {
+    const r = routines[type];
+    $("peekTitle").textContent = `${dayName} • ${r.name}`;
+    const dateText = new Intl.DateTimeFormat(undefined,{month:"long",day:"numeric"}).format(date);
+    const rows = r.items.map((item,i) => `
+      <button class="peek-row" type="button" data-guide="${item[0]}">
+        <div class="peek-num">${i+1}</div>
+        <div class="peek-main"><div class="peek-name">${item[0]}</div><div class="peek-meta">2:00 • ${i===0?"Start":"Station "+(i+1)}</div></div>
+        <div aria-hidden="true">›</div>
+      </button>
+    `).join("");
+    $("peekContent").innerHTML = `
+      <div class="peek-summary">
+        <div class="peek-title">${r.name}</div>
+        <div class="peek-sub">${dateText} • ${r.focus}</div>
+      </div>
+      <div class="day-peek-label">Workout plan</div>
+      <div class="peek-list">${rows}</div>
+      <div class="small-note">Tap an exercise to learn it. ${isToday ? "This is today's active workout." : "Preview only — viewing this plan will not start the timer."}</div>
+      ${isToday ? `<button class="btn btn-primary sheet-close" id="peekStartToday" type="button">Start today's workout</button>` : ""}
+    `;
+    $("peekContent").querySelectorAll("[data-guide]").forEach(btn => {
+      btn.addEventListener("click", () => openGuide(btn.dataset.guide));
+    });
+    const start = $("peekContent").querySelector("#peekStartToday");
+    if (start) start.addEventListener("click", () => {
+      $("peekDialog").close();
+      $("startBtn").focus();
+    });
+    $("peekDialog").showModal();
+  }
+
   function render() {
     const elapsed = getElapsed();
     const state = currentState(elapsed);
@@ -639,6 +1074,7 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       $("station").textContent = "15:00 finished";
       $("currentExercise").textContent = "Workout complete";
       $("currentHint").textContent = "Recover, hydrate, and come back tomorrow.";
+      $("currentGuideBtn").classList.add("hidden");
       $("nextRow").classList.add("hidden");
       $("startBtn").textContent = "Start again";
       $("startBtn").disabled = false;
@@ -648,6 +1084,8 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       $("station").textContent = "Final 1:00";
       $("currentExercise").textContent = "Full-Body Stretch & Breathing";
       $("currentHint").textContent = "Slow down, breathe, and let the session finish.";
+      $("currentGuideBtn").classList.remove("hidden");
+      $("currentGuideBtn").onclick = () => openGuide("Full-Body Stretch & Breathing");
       $("nextRow").classList.add("hidden");
       $("startBtn").textContent = running ? "Workout running" : "Resume";
     } else if (running || elapsed > 0) {
@@ -656,6 +1094,8 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       $("station").textContent = `Station ${state.index+1} of ${WORK_STATIONS}`;
       $("currentExercise").textContent = routine.items[state.index][0];
       $("currentHint").textContent = routine.items[state.index][1];
+      $("currentGuideBtn").classList.remove("hidden");
+      $("currentGuideBtn").onclick = () => openGuide(routine.items[state.index][0]);
       const next = state.index + 1 < WORK_STATIONS ? routine.items[state.index+1][0] : "Cooldown";
       $("nextExercise").textContent = next;
       $("nextTime").textContent = state.index + 1 < WORK_STATIONS ? "2:00" : "1:00";
@@ -667,6 +1107,8 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       $("station").textContent = "7 × 2:00 + 1:00 finish";
       $("currentExercise").textContent = routine.items[0][0];
       $("currentHint").textContent = routine.items[0][1];
+      $("currentGuideBtn").classList.remove("hidden");
+      $("currentGuideBtn").onclick = () => openGuide(routine.items[0][0]);
       $("nextExercise").textContent = routine.items[1][0];
       $("nextTime").textContent = "2:00";
       $("nextRow").classList.remove("hidden");
@@ -865,8 +1307,12 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
       const row = document.createElement("div");
       row.className = "exercise-row";
       row.dataset.index = String(i);
-      row.innerHTML = `<div class="row-num">${i+1}</div><div class="row-main"><div class="row-title"></div><div class="row-meta">Controlled effort • 2:00</div></div><div class="row-time">2:00</div>`;
+      row.innerHTML = `<div class="row-num">${i+1}</div><div class="row-main"><div class="row-title"></div><div class="row-meta">Tap to learn • 2:00</div></div><div class="row-time">›</div>`;
       row.querySelector(".row-title").textContent = item[0];
+      row.setAttribute("role","button");
+      row.tabIndex = 0;
+      row.addEventListener("click", () => openGuide(item[0]));
+      row.addEventListener("keydown", e => { if (e.key==="Enter" || e.key===" ") { e.preventDefault(); openGuide(item[0]); } });
       list.appendChild(row);
     });
   }
@@ -909,13 +1355,47 @@ button:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var
     if (e.key.toLowerCase()==="s" && running) { e.preventDefault(); skipInterval(); }
   });
 
+
+  $("currentGuideBtn").addEventListener("click", () => {
+    const state = currentState(getElapsed());
+    const name = state.type==="cooldown" ? "Full-Body Stretch & Breathing" : routine.items[state.index || 0][0];
+    openGuide(name);
+  });
+
+  $("exerciseSearch").addEventListener("input", e => renderExerciseLibrary(e.target.value));
+
+  const peekDialog = $("peekDialog");
+  $("closePeek").addEventListener("click",()=>peekDialog.close());
+  $("closePeek2").addEventListener("click",()=>peekDialog.close());
+
+  const guideDialog = $("guideDialog");
+  $("closeGuide").addEventListener("click",()=>guideDialog.close());
+  $("closeGuide2").addEventListener("click",()=>guideDialog.close());
+
+  $("welcomeExercises").addEventListener("click", () => {
+    localStorage.setItem("lift15.welcomeSeen","1");
+    $("welcomeDialog").close();
+    $("exerciseSearch").focus();
+    $("exerciseLibrarySection").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("welcomeStart").addEventListener("click", () => {
+    localStorage.setItem("lift15.welcomeSeen","1");
+    $("welcomeDialog").close();
+    startWorkout();
+  });
+
   buildRoutine();
+  renderExerciseLibrary();
   syncSettingButtons();
   syncLoad();
   calculateStats();
   renderWeek();
   renderHistory();
   render();
+
+  if (!localStorage.getItem("lift15.welcomeSeen")) {
+    setTimeout(() => { try { $("welcomeDialog").showModal(); } catch (_) {} }, 350);
+  }
 })();
 </script>
 
